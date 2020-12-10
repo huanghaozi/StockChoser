@@ -2,8 +2,8 @@ import markdown
 import re
 
 md_file = open('README.md', 'r', encoding='utf-8')
-s = '''<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.js"></script>
-<style>
+s = '''<style>
+    .push-cont-wrap {word-break: normal;border: none; white-space: normal;}
     table {
     width: 100%;
     max-width: 65em;
@@ -37,17 +37,7 @@ table th {
 table td:nth-child(1) {
     white-space: nowrap;
 }
-</style>
-<script>
-    [].slice.call(document.querySelectorAll('table')).forEach(function(el){
-    var wrapper = document.createElement('div');
-    wrapper.className = 'table-area';
-    el.parentNode.insertBefore(wrapper, el);
-    el.parentNode.removeChild(el);
-    wrapper.appendChild(el);
-});
-$("table").wrap("<div class='table-area'></div>");
-</script>'''
+</style>'''
 s += md_file.read()
 html = markdown.markdown(s, output_format='html5', extensions=['markdown.extensions.tables'])
 html = re.sub(r' align=".*?"', r'', html)
