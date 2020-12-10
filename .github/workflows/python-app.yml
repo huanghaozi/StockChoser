@@ -25,6 +25,12 @@ jobs:
     - name: Get Latest Data
       run: |
         python get_new_data.py
+        python produce_html.py
+    - name: Push Plus
+      run: |
+        python push.py
+      with:
+        token: ${{ secrets.token }}
     - name: Commit
       run: |
         git config --global user.email johnhaung@163.com

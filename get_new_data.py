@@ -94,7 +94,7 @@ df = df[df['经营净额比净利润'] >= 120]
 df = df[df['净资产收益率ROE'] >= 15]
 df = df[df['投入资本回报率ROIC'] >= 3]
 
-newly = df[['证券代码', '证券名称', '公告日', '报告期']].apply(lambda y: y.apply(lambda x: x.split(' 00:00:00')[0]))
+newly = df.apply(lambda y: y.apply(lambda x: str(x).split(' 00:00:00')[0]))
 output = '# 近七日新增\r\n'
 s = newly.to_markdown(index=False)
 output += s
@@ -108,8 +108,8 @@ date = datetime.datetime.now()
 month = (date.month - 1) - (date.month - 1) % 3 + 1
 newdate = datetime.datetime(date.year, month, 1)
 newdate = newdate + datetime.timedelta(days=-1)
-near = df[pd.to_datetime(df['报告期']) >= newdate][['证券代码', '证券名称', '公告日', '报告期']].apply(
-    lambda y: y.apply(lambda x: x.split(' 00:00:00')[0]))
+near = df[pd.to_datetime(df['报告期']) >= newdate].apply(
+    lambda y: y.apply(lambda x: str(x).split(' 00:00:00')[0]))
 output += '# 最近季度\r\n'
 s = near.to_markdown(index=False)
 output += s
@@ -119,8 +119,8 @@ date = newdate
 month = (date.month - 1) - (date.month - 1) % 3 + 1
 newdate = datetime.datetime(date.year, month, 1)
 newdate = newdate + datetime.timedelta(days=-1)
-nearlast = df[pd.to_datetime(df['报告期']) == newdate][['证券代码', '证券名称', '公告日', '报告期']].apply(
-    lambda y: y.apply(lambda x: x.split(' 00:00:00')[0]))
+nearlast = df[pd.to_datetime(df['报告期']) == newdate].apply(
+    lambda y: y.apply(lambda x: str(x).split(' 00:00:00')[0]))
 output += '# 上一季度\r\n'
 s = nearlast.to_markdown(index=False)
 output += s
@@ -130,8 +130,8 @@ date = newdate
 month = (date.month - 1) - (date.month - 1) % 3 + 1
 newdate = datetime.datetime(date.year, month, 1)
 newdate = newdate + datetime.timedelta(days=-1)
-nearnearlast = df[pd.to_datetime(df['报告期']) == newdate][['证券代码', '证券名称', '公告日', '报告期']].apply(
-    lambda y: y.apply(lambda x: x.split(' 00:00:00')[0]))
+nearnearlast = df[pd.to_datetime(df['报告期']) == newdate].apply(
+    lambda y: y.apply(lambda x: str(x).split(' 00:00:00')[0]))
 output += '# 上上季度\r\n'
 s = nearnearlast.to_markdown(index=False)
 output += s
@@ -145,6 +145,6 @@ s = jnji.to_markdown(index=False)
 output += s
 output += '\r\n\r\n'
 
-f = open('推送.md', 'w', encoding='utf-8')
+f = open('README.md', 'w', encoding='utf-8')
 f.write(output)
 f.close()
