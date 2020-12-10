@@ -126,7 +126,20 @@ f = open('上一季度.md', 'w', encoding='utf-8')
 f.write(s)
 f.close()
 
-jnji = pd.merge(near, nearlast, on=['证券代码', '证券名称'])
+date = newdate
+month = (date.month - 1) - (date.month - 1) % 3 + 1
+newdate = datetime.datetime(date.year, month, 1)
+newdate = newdate + datetime.timedelta(days=-1)
+nearnearlast = df[pd.to_datetime(df['报告期']) == newdate][['证券代码', '证券名称', '公告日', '报告期']].apply(
+    lambda y: y.apply(lambda x: x.split(' 00:00:00')[0]))
+s = nearnearlast.to_markdown(index=False)
+f = open('上上季度.md', 'w', encoding='utf-8')
+f.write(s)
+f.close()
+
+jnji1 = pd.merge(near, nearlast, on=['证券代码', '证券名称'])[['证券代码', '证券名称']]
+jnji2 = pd.merge(near, nearnearlast, on=['证券代码', '证券名称'])[['证券代码', '证券名称']]
+jnji = pd.concat([jnji1, jnji2], axis=0).drop_duplicates()
 s = jnji.to_markdown(index=False)
 f = open('交集.md', 'w', encoding='utf-8')
 f.write(s)
