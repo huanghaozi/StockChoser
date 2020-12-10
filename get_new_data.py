@@ -95,10 +95,10 @@ df = df[df['净资产收益率ROE'] >= 15]
 df = df[df['投入资本回报率ROIC'] >= 3]
 
 newly = df[['证券代码', '证券名称', '公告日', '报告期']].apply(lambda y: y.apply(lambda x: x.split(' 00:00:00')[0]))
+output = '# 近七日新增\r\n'
 s = newly.to_markdown(index=False)
-f = open('今日新增.md', 'w', encoding='utf-8')
-f.write(s)
-f.close()
+output += s
+output += '\r\n\r\n'
 
 df_origin = pd.read_excel('筛选结果.xlsx', dtype='object')
 df = pd.concat([df_origin, df], axis=0)
@@ -110,10 +110,10 @@ newdate = datetime.datetime(date.year, month, 1)
 newdate = newdate + datetime.timedelta(days=-1)
 near = df[pd.to_datetime(df['报告期']) >= newdate][['证券代码', '证券名称', '公告日', '报告期']].apply(
     lambda y: y.apply(lambda x: x.split(' 00:00:00')[0]))
+output += '# 最近季度\r\n'
 s = near.to_markdown(index=False)
-f = open('最近季度.md', 'w', encoding='utf-8')
-f.write(s)
-f.close()
+output += s
+output += '\r\n\r\n'
 
 date = newdate
 month = (date.month - 1) - (date.month - 1) % 3 + 1
@@ -121,10 +121,10 @@ newdate = datetime.datetime(date.year, month, 1)
 newdate = newdate + datetime.timedelta(days=-1)
 nearlast = df[pd.to_datetime(df['报告期']) == newdate][['证券代码', '证券名称', '公告日', '报告期']].apply(
     lambda y: y.apply(lambda x: x.split(' 00:00:00')[0]))
+output += '# 上一季度\r\n'
 s = nearlast.to_markdown(index=False)
-f = open('上一季度.md', 'w', encoding='utf-8')
-f.write(s)
-f.close()
+output += s
+output += '\r\n\r\n'
 
 date = newdate
 month = (date.month - 1) - (date.month - 1) % 3 + 1
@@ -132,16 +132,19 @@ newdate = datetime.datetime(date.year, month, 1)
 newdate = newdate + datetime.timedelta(days=-1)
 nearnearlast = df[pd.to_datetime(df['报告期']) == newdate][['证券代码', '证券名称', '公告日', '报告期']].apply(
     lambda y: y.apply(lambda x: x.split(' 00:00:00')[0]))
+output += '# 上上季度\r\n'
 s = nearnearlast.to_markdown(index=False)
-f = open('上上季度.md', 'w', encoding='utf-8')
-f.write(s)
-f.close()
+output += s
+output += '\r\n\r\n'
 
 jnji1 = pd.merge(near, nearlast, on=['证券代码', '证券名称'])[['证券代码', '证券名称']]
 jnji2 = pd.merge(near, nearnearlast, on=['证券代码', '证券名称'])[['证券代码', '证券名称']]
 jnji = pd.concat([jnji1, jnji2], axis=0).drop_duplicates()
+output += '# 交集\r\n'
 s = jnji.to_markdown(index=False)
-f = open('交集.md', 'w', encoding='utf-8')
-f.write(s)
-f.close()
+output += s
+output += '\r\n\r\n'
 
+f = open('推送.md', 'w', encoding='utf-8')
+f.write(output)
+f.close()
