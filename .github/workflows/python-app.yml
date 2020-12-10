@@ -30,13 +30,13 @@ jobs:
         python push.py
       env:
         token: ${{ secrets.token }}
-    - name: Commit
+    - name: Commit files
       run: |
-        git config --global user.email johnhaung@163.com
-        git config --global user.name huanghaozi
-        git add .
-        git commit -m "UPDATE DATA by github actions, developed by HH" -a
-    - name: GitHub Push
+        git config --local user.email "johnhaung@163.com"
+        git config --local user.name "huanghaozi"
+        git commit -m "Update Data by bot, scripted by HH" -a
+    - name: Push changes
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }}
