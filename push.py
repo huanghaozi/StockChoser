@@ -2,7 +2,7 @@ import requests
 import json
 import os
 
-token = os.getenv('INPUT_TOKEN')
+token = os.getenv('token')
 title = '选股器今日数据'  # 改成你要的标题内容
 f = open('推送.html', 'r', encoding='utf-8')
 content = f.read()
